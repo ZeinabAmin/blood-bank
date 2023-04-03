@@ -50,6 +50,7 @@
     </div>
 
     <!--about-->
+
     <div class="about">
         <div class="container">
             <div class="col-lg-6 text-center">
@@ -59,6 +60,8 @@
             </div>
         </div>
     </div>
+
+
 
     <!--articles-->
     <div class="articles">
@@ -76,9 +79,7 @@
                             <div class="card">
                                 <div class="photo">
                                     <img src="{{ asset('uploads/images/posts/' . $post->image) }}">
-                                    {{-- <img src="{{asset($post->image)}}" class="card-img-top" alt="..."> --}}
-                                    {{-- <a  href="{{url(route('article-details/'.$post->id))}}" class="click">المزيد</a> --}}
-                                    {{-- <a  href="{{url('post/'.$post->id)}}" class="click">المزيد</a> --}}
+                                    <a  href="{{url('article-details',$post->id)}}" class="click">المزيد</a>
 
                                 </div>
                                 {{-- {{-- <a href="#" class="favourite"> --}}
@@ -118,15 +119,23 @@
         </div>
         <div class="content">
             <div class="container">
-                <form class="row filter">
+                {{-- <form class="row filter"> --}}
+
+                    {!! Form::open([
+                        'method' => 'get',
+                        'class'=>"row filter",
+                    ]) !!}
+
                     <div class="col-md-5 blood">
                         <div class="form-group">
                             <div class="inside-select">
 
 
 
-
-
+                                {!! Form::open([
+                                    'action'=>'App\Http\Controllers\Front\MainController@home',
+                                    'method' => 'get',
+                                ]) !!}
 
 
                                 @inject('bloodType', 'App\Models\BloodType')
@@ -141,13 +150,6 @@
 
 
 
-                                {{-- <select class="form-control" id="exampleFormControlSelect1">
-                                        <option selected disabled>اختر فصيلة الدم</option>
-                                        <option>+A</option>
-                                        <option>+B</option>
-                                        <option>+AB</option>
-                                        <option>-O</option>
-                                    </select> --}}
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                         </div>
@@ -166,13 +168,7 @@
                                 ]) !!}
 
 
-                                {{-- <select class="form-control" id="exampleFormControlSelect1">
-                                        <option selected disabled>اختر المدينة</option>
-                                        <option>المنصورة</option>
-                                        <option>القاهرة</option>
-                                        <option>الإسكندرية</option>
-                                        <option>سوهاج</option>
-                                    </select> --}}
+
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                         </div>
@@ -182,9 +178,11 @@
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
-                </form>
+                {{-- </form> --}}
+                {!! Form::close() !!}
 
                 <div class="patients">
+                    @if ($donationRequests->count())
                     @foreach ($donationRequests as $donationRequest)
                         <div class="details">
                             <div class="blood-type">
@@ -195,46 +193,22 @@
                                 <li><span>مستشفى:</span>{{ $donationRequest->hospital_name }}</li>
                                 <li><span>المدينة:</span>{{ $donationRequest->city->name }}</li>
                             </ul>
-                            <a href="inside-request.html">التفاصيل</a>
+                            <a href="{{route('inside-request',$donationRequest->id)}}">التفاصيل</a>
+                            {{-- <a href="inside-request.html">التفاصيل</a> --}}
                         </div>
                     @endforeach
-                    {{-- <div class="details">
-                            <div class="blood-type">
-                                <h2 dir="ltr">A+</h2>
-                            </div>
-                            <ul>
-                                <li><span>اسم الحالة:</span> احمد محمد احمد</li>
-                                <li><span>مستشفى:</span> القصر العينى</li>
-                                <li><span>المدينة:</span> المنصورة</li>
-                            </ul>
-                            <a href="inside-request.html">التفاصيل</a>
-                        </div>
-                        <div class="details">
-                            <div class="blood-type">
-                                <h2 dir="ltr">AB+</h2>
-                            </div>
-                            <ul>
-                                <li><span>اسم الحالة:</span> احمد محمد احمد</li>
-                                <li><span>مستشفى:</span> القصر العينى</li>
-                                <li><span>المدينة:</span> المنصورة</li>
-                            </ul>
-                            <a href="inside-request.html">التفاصيل</a>
-                        </div>
-                        <div class="details">
-                            <div class="blood-type">
-                                <h2 dir="ltr">O-</h2>
-                            </div>
-                            <ul>
-                                <li><span>اسم الحالة:</span> احمد محمد احمد</li>
-                                <li><span>مستشفى:</span> القصر العينى</li>
-                                <li><span>المدينة:</span> المنصورة</li>
-                            </ul>
-                            <a href="inside-request.html">التفاصيل</a>
-                        </div> --}}
+
+                    <div class="more">
+                        <a  href="{{url(route('donations'))}}">المزيد</a>
+                    </div>
+
+
+                    @else
+                            <p class="text text-center mb-5" >عذرا, لايوجد طلبات تبرع</p>
+                            @endif
+
                 </div>
-                <div class="more">
-                    <a href="{{ url('front/donation-requests.blade.php') }}">المزيد</a>
-                </div>
+
             </div>
         </div>
     </div>

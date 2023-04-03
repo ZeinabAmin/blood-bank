@@ -25,16 +25,22 @@ class Post extends Model
     public function getIsFavouriteAttribute()
     {
     // return true;
+    $user = auth('api')->user();
+    if(!$user){
+        $user = auth('client-web')->user();
+    }
+    if($user){
+       $favourite =$user->whereHas('favourites',function ($query) {
+            $query->where('client_post.post_id',$this->id);
+        })->first();
 
-        // $favourite = request()->user()->whereHas('favourites',function ($query) {
-        //     $query->where('client_post.post_id',$this->id);
-        // })->first();
+        if ($favourite)
+        {
+            return true;
+        }
+    }
 
-        // if ($favourite)
-        // {
-        //     return true;
-        // }
-        // return false;
+        return false;
     }
 
     public function favourites()

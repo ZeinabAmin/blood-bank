@@ -30,7 +30,7 @@ $this->middleware('permission:users-delete', ['only' => ['destroy']]);
     {
         $records = City::paginate(20);
         return view('cities.index', compact('records'));
-        //   return view('cities.index')->with('records');
+       
     }
 
     /**

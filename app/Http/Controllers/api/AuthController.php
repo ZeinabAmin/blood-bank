@@ -159,7 +159,7 @@ class AuthController extends Controller
                 Mail::to($user->email)
                     ->bcc("zeinabamin00@gmail.com")
                     ->send(new ResetPassword($user));
-                return responseJson(1, 'برجاء فحص هاتفك', [
+               return responseJson(1, 'برجاء فحص بريدك الالكتروني', [
                     'pin_code_for_test' => $code,
                     'mail_fails' => Mail::failures(),
                     'email' => $user->email
@@ -233,7 +233,6 @@ class AuthController extends Controller
             return responseJson(0, $validation->errors()->first(), $data);
         }
         Token::where('token', $request->token)->delete();
-        $request->user()->tokens()->create($request->all());
         return responseJson(1, 'تم الحذف بنجاح');
     }
 }

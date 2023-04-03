@@ -12,6 +12,7 @@ function responseJson($status,$msg,$data=null){
 
 
 
+//https://paste.laravel.io/7ec6af34-a9ca-4522-a80b-1b3b40fbd702#64
 
 
 function notifyByFirebase($title, $body, $tokens, $data = [], $is_notification = true)

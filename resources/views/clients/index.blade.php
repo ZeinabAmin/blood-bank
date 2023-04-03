@@ -33,7 +33,7 @@
                         'method' => 'get',
                     ]) !!}
 
-
+  
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="form-group">
@@ -87,7 +87,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($records as $record)
-                                    <tr> 
+                                    <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $record->name }}</td>
                                         <td>{{ $record->phone }}</td>

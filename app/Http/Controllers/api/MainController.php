@@ -27,10 +27,12 @@ class MainController extends Controller
     public function cities(Request $request)
     {
         $cities = City::where(function ($query) use ($request) {
-            if ($request->has('governorate_id')) {
+            if ($request->has('governorate_id')){
                 $query->where('governorate_id', $request->governorate_id);
             }
+
         })->get();
+
         return responseJson(1, 'sucsess', $cities);
     }
 
@@ -147,9 +149,9 @@ class MainController extends Controller
         $rules = [
 
             'patient_name' => 'required',
-            'patient_age' => 'required:digits',
+            'patient_age' => 'required|digits:2',
             'blood_type_id' => 'required|exists:blood_types,id',
-            'bags_num' => 'required:digits',
+            'bags_num' => 'required|digits:1',
             'hospital_name' => 'required',
             'city_id' => 'required|exists:cities,id',
             'patient_phone' => 'required|digits:11',
@@ -171,7 +173,16 @@ class MainController extends Controller
 
         //  find clients suitable for this donation request
         //blood_types
-        $clientsIds = $donationRequest->city->governorate->clients()->whereHas('clientBloodTypes', function ($query) use ($request, $donationRequest) {
+
+        // $clientsIds = Client::whereHas('governorates',function ($query) use($donationRequest){
+        //     $query->where('governorates.id',$donationRequest->city->governorate_id);
+
+        // })->whereHas('clientBloodTypes',function ($query) use($donationRequest){
+        //     $query->where('blood_types.id',$donationRequest->blood_type_id);
+
+        // })->pluck('clients.id')->toArray();
+
+        $clientsIds = $donationRequest->city->governorate->clients()->whereHas('clientBloodTypes', function ($query) use ($request,$donationRequest) {
             $query->where('blood_types.id', $request->blood_type_id);
         })->pluck('clients.id')->toArray();
 
@@ -193,6 +204,15 @@ class MainController extends Controller
             $notification->clients()->attach($clientsIds);
 
             //get tokens for fcm (push notification using firebase cloud)
+
+            // $tokens = Token::where('token', '!=', null)->whereHas('client',function($client)use($donationRequest){
+            //     $client->whereHas('governorates',function($query)use($donationRequest){
+            //         $query->where('governorates.id',$donationRequest->city->governorate_id);
+            //     })->whereHas('clientBloodTypes',function ($query) use($donationRequest){
+            //   $query->where('blood_types.id',$donationRequest->blood_type_id);
+            //     });
+            // })->pluck('token')->toArray();
+
 
             $tokens = Token::whereIn('client_id', $clientsIds)->where('token', '!=', null)->pluck('token')->toArray();
             // dd($tokens);
